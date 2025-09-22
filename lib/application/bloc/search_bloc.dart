@@ -11,6 +11,11 @@ class SearchTrackEvent extends SearchEvent {
   SearchTrackEvent({required this.searchTerm});
 }
 
+class LikeTrackEvent extends SearchEvent {
+  final Track track;
+  LikeTrackEvent({required this.track});
+}
+
 //States
 abstract class SearchState {}
 
@@ -28,6 +33,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   SearchBloc() : super(IdleState()) {
     on<SearchTrackEvent>(_onSearchTracks);
+    on<LikeTrackEvent>(_onLikeTrack);
+  }
+
+  Future<void> _onLikeTrack(
+    LikeTrackEvent event,
+    Emitter<SearchState> emit,
+  ) async {
+    await trackRepository.likeTrack(event.track);
   }
 
   Future<void> _onSearchTracks(
@@ -38,6 +51,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     List<Track> tracks = await trackRepository.getTracksBySearchTerm(
       event.searchTerm,
     );
+
     emit(SuccessState(tracks: tracks));
   }
 }

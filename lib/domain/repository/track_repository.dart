@@ -7,4 +7,8 @@ class TrackRepository {
   Future<List<Track>> getTracksBySearchTerm(String searchTerm) {
     return dataSource.searchTracks(searchTerm);
   }
+
+  Future<void> likeTrack(Track track) async {
+    await dataSource.postTrack(track);
+  }
 }

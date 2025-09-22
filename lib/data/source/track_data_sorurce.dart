@@ -21,12 +21,23 @@ class TrackDataSource {
         albumCover: datai["album"]["cover_medium"],
       );
       output.add(tracki);
-      print(datai["id"]);
-      print(datai["title"]);
-      print(datai["artist"]["name"]);
-      print(datai["album"]["cover_medium"]);
-      print("***");
     }
     return output;
+  }
+
+  Future<void> postTrack(Track track) async {
+    final url = Uri.parse(
+      "https://facelogprueba.firebaseio.com/playlist/domiciano.json",
+    );
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'id': track.id,
+        'title': track.title,
+        'artist': track.artist,
+        'albumCover': track.albumCover,
+      }),
+    );
   }
 }
